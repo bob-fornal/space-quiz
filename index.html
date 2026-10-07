@@ -300,6 +300,25 @@
             margin-top: 1.5rem;
         }
 
+        .difficulty-screen {
+            text-align: center;
+        }
+
+        .difficulty-screen h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .difficulty-screen p {
+            margin-bottom: 1.5rem;
+            opacity: 0.85;
+        }
+
+        .difficulty-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
         .btn {
             flex: 1;
             padding: 0.875rem 1.5rem;
@@ -387,6 +406,11 @@
             color: #10b981;
         }
 
+        .results-difficulty {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
         .results-message {
             font-size: 1.1rem;
             margin-bottom: 2rem;
@@ -431,8 +455,18 @@
                 <h1>🚀 Space Quest</h1>
             </div>
 
+            <div id="difficultyScreen" class="difficulty-screen">
+                <h2>Choose your difficulty</h2>
+                <p>Select a level to begin your space quiz.</p>
+                <div class="difficulty-options">
+                    <button class="btn btn-primary" onclick="startQuiz('easy')">Easy</button>
+                    <button class="btn btn-primary" onclick="startQuiz('medium')">Medium</button>
+                    <button class="btn btn-primary" onclick="startQuiz('hard')">Hard</button>
+                </div>
+            </div>
+
             <!-- Quiz Content -->
-            <div id="quizContent">
+            <div id="quizContent" class="hidden">
                 <!-- Progress Section -->
                 <div class="progress-section">
                     <div class="progress-info">
@@ -465,6 +499,7 @@
             <div id="resultsScreen" class="results-screen hidden">
                 <div class="results-emoji" id="resultEmoji">🌟</div>
                 <div class="results-title">Quiz Complete!</div>
+                <div class="results-difficulty" id="resultDifficulty"></div>
                 <div class="results-score" id="finalScore">0/10</div>
                 <div class="results-message" id="resultMessage">Great effort!</div>
                 <div class="button-group">
@@ -475,7 +510,60 @@
     </div>
 
     <script>
-        const quizData = [
+        const questionPools = {
+            easy: [
+                {
+                    question: "Which planet is known as the Red Planet?",
+                    options: ["Venus", "Mars", "Jupiter", "Neptune"],
+                    correct: 1
+                },
+                {
+                    question: "What is Earth's natural satellite called?",
+                    options: ["Titan", "Europa", "The Moon", "Phobos"],
+                    correct: 2
+                },
+                {
+                    question: "Which star is closest to Earth?",
+                    options: ["Sirius", "The Sun", "Polaris", "Vega"],
+                    correct: 1
+                },
+                {
+                    question: "Which planet do we live on?",
+                    options: ["Mars", "Earth", "Mercury", "Saturn"],
+                    correct: 1
+                },
+                {
+                    question: "What do astronauts wear in space?",
+                    options: ["Raincoats", "Spacesuits", "Lab coats", "Swimsuits"],
+                    correct: 1
+                },
+                {
+                    question: "Which planet is famous for its large rings?",
+                    options: ["Mercury", "Earth", "Saturn", "Mars"],
+                    correct: 2
+                },
+                {
+                    question: "What is the name of our galaxy?",
+                    options: ["Andromeda", "Orion", "The Milky Way", "Sombrero"],
+                    correct: 2
+                },
+                {
+                    question: "Which object gives Earth most of its light and heat?",
+                    options: ["The Moon", "The Sun", "Mars", "Jupiter"],
+                    correct: 1
+                },
+                {
+                    question: "Which planet is closest to the Sun?",
+                    options: ["Earth", "Uranus", "Mercury", "Neptune"],
+                    correct: 2
+                },
+                {
+                    question: "What do we call a person who travels and works in space?",
+                    options: ["Geologist", "Astronaut", "Meteorologist", "Botanist"],
+                    correct: 1
+                }
+            ],
+            medium: [
             {
                 question: "What is the name of Earth's natural satellite?",
                 options: ["Mars", "The Moon", "Venus", "Titan"],
@@ -526,20 +614,82 @@
                 options: ["Neptune", "Pluto", "Uranus", "Saturn"],
                 correct: 1
             }
-        ];
+            ],
+            hard: [
+                {
+                    question: "Which moon is the only one known to have stable bodies of liquid on its surface?",
+                    options: ["Europa", "Ganymede", "Titan", "Callisto"],
+                    correct: 2
+                },
+                {
+                    question: "Which dwarf planet is located in the asteroid belt?",
+                    options: ["Pluto", "Ceres", "Eris", "Haumea"],
+                    correct: 1
+                },
+                {
+                    question: "Which planet has the shortest day, rotating in about 10 hours?",
+                    options: ["Earth", "Mars", "Jupiter", "Venus"],
+                    correct: 2
+                },
+                {
+                    question: "What is the largest moon in the solar system?",
+                    options: ["Titan", "Callisto", "Earth's Moon", "Ganymede"],
+                    correct: 3
+                },
+                {
+                    question: "Which planet has an axial tilt of about 98 degrees?",
+                    options: ["Neptune", "Saturn", "Uranus", "Mercury"],
+                    correct: 2
+                },
+                {
+                    question: "Which spacecraft was the first to enter interstellar space?",
+                    options: ["Pioneer 10", "New Horizons", "Voyager 2", "Voyager 1"],
+                    correct: 3
+                },
+                {
+                    question: "What is the largest volcano known in the solar system?",
+                    options: ["Mauna Kea", "Olympus Mons", "Elysium Mons", "Ascraeus Mons"],
+                    correct: 1
+                },
+                {
+                    question: "Which planet has the moon Triton, which orbits in a retrograde direction?",
+                    options: ["Uranus", "Jupiter", "Saturn", "Neptune"],
+                    correct: 3
+                },
+                {
+                    question: "Which planet has the highest average density?",
+                    options: ["Mercury", "Venus", "Earth", "Mars"],
+                    correct: 2
+                },
+                {
+                    question: "The Kuiper Belt is primarily located beyond the orbit of which planet?",
+                    options: ["Saturn", "Jupiter", "Mars", "Neptune"],
+                    correct: 3
+                }
+            ]
+        };
 
+        let selectedDifficulty = null;
+        let quizData = [];
         let currentQuestion = 0;
         let score = 0;
         let wrongCount = 0;
         let answered = new Set();
-        let answers = new Array(10).fill(null);
+        let answers = [];
+
+        function startQuiz(difficulty) {
+            selectedDifficulty = difficulty;
+            quizData = questionPools[difficulty];
+            initQuiz();
+        }
 
         function initQuiz() {
             currentQuestion = 0;
             score = 0;
             wrongCount = 0;
             answered.clear();
-            answers = new Array(10).fill(null);
+            answers = new Array(quizData.length).fill(null);
+            document.getElementById('difficultyScreen').classList.add('hidden');
             document.getElementById('quizContent').classList.remove('hidden');
             document.getElementById('resultsScreen').classList.add('hidden');
             loadQuestion();
@@ -615,9 +765,9 @@
         }
 
         function updateProgress() {
-            const progress = ((currentQuestion + 1) / 10) * 100;
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressText').textContent = `Question ${currentQuestion + 1} of 10`;
+            document.getElementById('progressText').textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
         }
 
         function updateScoreDisplay() {
@@ -627,11 +777,11 @@
 
         function updateNavigation() {
             document.getElementById('prevBtn').disabled = currentQuestion === 0;
-            document.getElementById('nextBtn').textContent = currentQuestion === 9 ? 'Finish' : 'Next →';
+            document.getElementById('nextBtn').textContent = currentQuestion === quizData.length - 1 ? 'Finish' : 'Next →';
         }
 
         function nextQuestion() {
-            if (currentQuestion < 9) {
+            if (currentQuestion < quizData.length - 1) {
                 currentQuestion++;
                 loadQuestion();
             } else {
@@ -650,8 +800,9 @@
             document.getElementById('quizContent').classList.add('hidden');
             document.getElementById('resultsScreen').classList.remove('hidden');
 
-            const percentage = Math.round((score / 10) * 100);
-            document.getElementById('finalScore').textContent = `${score}/10 (${percentage}%)`;
+            const percentage = Math.round((score / quizData.length) * 100);
+            document.getElementById('finalScore').textContent = `${score}/${quizData.length} (${percentage}%)`;
+            document.getElementById('resultDifficulty').textContent = `${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} difficulty`;
 
             let emoji = '🌟';
             let message = 'Great effort!';
@@ -678,11 +829,13 @@
         }
 
         function restartQuiz() {
-            initQuiz();
+            selectedDifficulty = null;
+            quizData = [];
+            document.getElementById('quizContent').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('difficultyScreen').classList.remove('hidden');
         }
 
-        // Initialize quiz on page load
-        window.addEventListener('load', initQuiz);
     </script>
 </body>
 </html>
