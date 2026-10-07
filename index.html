@@ -287,6 +287,31 @@
             color: #7f1d1d;
         }
 
+        .learning-panel {
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .learning-toggle {
+            width: 100%;
+        }
+
+        .learning-explanation {
+            margin-top: 0.75rem;
+            padding: 0.875rem;
+            border: 1px solid rgba(8, 127, 140, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .learning-explanation {
+                border-color: rgba(134, 239, 172, 0.35);
+            }
+        }
+
         @media (prefers-color-scheme: dark) {
             .feedback.wrong {
                 background: rgba(239, 68, 68, 0.2);
@@ -417,6 +442,46 @@
             opacity: 0.85;
         }
 
+        .results-review {
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .results-review h2 {
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .review-item {
+            margin-bottom: 0.75rem;
+            padding: 0.875rem;
+            border: 1px solid rgba(8, 127, 140, 0.3);
+            border-radius: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .review-item {
+                border-color: rgba(134, 239, 172, 0.35);
+            }
+        }
+
+        .review-question {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .review-answer {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .review-explanation {
+            margin-top: 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -486,6 +551,10 @@
                     <div class="question-text" id="questionText"></div>
                     <div class="options" id="optionsContainer"></div>
                     <div class="feedback" id="feedback"></div>
+                    <div class="learning-panel hidden" id="learningPanel">
+                        <button class="btn btn-secondary learning-toggle" id="learningToggle" type="button" aria-expanded="false" aria-controls="learningExplanation" data-context="this question" onclick="toggleExplanation(this, document.getElementById('learningExplanation'))">Learn more</button>
+                        <p class="learning-explanation hidden" id="learningExplanation"></p>
+                    </div>
                 </div>
 
                 <!-- Navigation -->
@@ -502,6 +571,10 @@
                 <div class="results-difficulty" id="resultDifficulty"></div>
                 <div class="results-score" id="finalScore">0/10</div>
                 <div class="results-message" id="resultMessage">Great effort!</div>
+                <section class="results-review" id="resultsReview" aria-labelledby="reviewTitle">
+                    <h2 id="reviewTitle">Review your answers</h2>
+                    <div id="reviewQuestions"></div>
+                </section>
                 <div class="button-group">
                     <button class="btn btn-primary" onclick="restartQuiz()" style="flex: 1;">Try Again</button>
                 </div>
@@ -528,13 +601,13 @@
                     question: "Which star is closest to Earth?",
                     options: ["Sirius", "The Sun", "Polaris", "Vega"],
                     correct: 1,
-                    explanation: "The Sun is the star at the center of our solar system. It is about 150 million kilometers from Earth. Sunlight takes about eight minutes to reach us. Source: NASA Sun."
+                    explanation: "The Sun is the star at the center of our solar system. It is about 150 million kilometers from Earth. Sunlight takes about eight minutes to reach us (Source: NASA Sun)."
                 },
                 {
                     question: "Which planet do we live on?",
                     options: ["Mars", "Earth", "Mercury", "Saturn"],
                     correct: 1,
-                    explanation: "Earth is the third planet from the Sun. It has abundant liquid water on its surface. It is the only world known to support life. Source: NASA Solar System Exploration."
+                    explanation: "Earth is the third planet from the Sun. It has abundant liquid water on its surface. It is the only world known to support life (Source: NASA Solar System Exploration)."
                 },
                 {
                     question: "What do astronauts wear in space?",
@@ -564,7 +637,7 @@
                     question: "Which planet is closest to the Sun?",
                     options: ["Earth", "Uranus", "Mercury", "Neptune"],
                     correct: 2,
-                    explanation: "Mercury orbits about 58 million kilometers from the Sun on average. Venus is hotter because its thick atmosphere traps heat, but Mercury is closer. Fun fact: Mercury has no moons. Source: NASA Mercury."
+                    explanation: "Mercury orbits about 58 million kilometers from the Sun on average. Venus is hotter because its thick atmosphere traps heat, but Mercury is closer. Fun fact: Mercury has no moons (Source: NASA Mercury)."
                 },
                 {
                     question: "What do we call a person who travels and works in space?",
@@ -578,13 +651,13 @@
                 question: "What is the name of Earth's natural satellite?",
                 options: ["Mars", "The Moon", "Venus", "Titan"],
                 correct: 1,
-                explanation: "The Moon is Earth's only natural satellite. Its gravity raises ocean tides on Earth. Scientists think it formed from debris after a large impact. Source: NASA Solar System Exploration."
+                explanation: "The Moon is Earth's only natural satellite. Its gravity raises ocean tides on Earth. Scientists think it formed from debris after a large impact (Source: NASA Solar System Exploration)."
             },
             {
                 question: "Which planet is known as the Red Planet?",
                 options: ["Venus", "Mars", "Jupiter", "Saturn"],
                 correct: 1,
-                explanation: "Mars looks red because iron minerals in its soil have rusted. A day there lasts about 24.6 hours. Robotic missions study whether the planet could once have supported microbial life. Source: NASA Mars Exploration."
+                explanation: "Mars looks red because iron minerals in its soil have rusted. A day there lasts about 24.6 hours. Robotic missions study whether the planet could once have supported microbial life (Source: NASA Mars Exploration)."
             },
             {
                 question: "How many moons does Jupiter have?",
@@ -596,7 +669,7 @@
                 question: "What is the largest planet in our solar system?",
                 options: ["Saturn", "Neptune", "Jupiter", "Uranus"],
                 correct: 2,
-                explanation: "Jupiter is the largest planet in our solar system. More than 1,300 Earths could fit inside it by volume. Its Great Red Spot is a giant storm. Source: NASA Jupiter."
+                explanation: "Jupiter is the largest planet in our solar system. More than 1,300 Earths could fit inside it by volume. Its Great Red Spot is a giant storm (Source: NASA Jupiter)."
             },
             {
                 question: "Which space agency first landed humans on the Moon?",
@@ -614,13 +687,13 @@
                 question: "Which planet is closest to the Sun?",
                 options: ["Venus", "Mercury", "Earth", "Mars"],
                 correct: 1,
-                explanation: "Mercury orbits about 58 million kilometers from the Sun on average. Venus is hotter because its thick atmosphere traps heat, but Mercury is closer. Fun fact: Mercury has no moons. Source: NASA Mercury."
+                explanation: "Mercury orbits about 58 million kilometers from the Sun on average. Venus is hotter because its thick atmosphere traps heat, but Mercury is closer. Fun fact: Mercury has no moons (Source: NASA Mercury)."
             },
             {
                 question: "What do we call a group of billions of stars held together by gravity?",
                 options: ["Constellation", "Galaxy", "Nebula", "Asteroid Belt"],
                 correct: 1,
-                explanation: "A galaxy is a vast collection of stars, gas, and dust bound together by gravity. Galaxies can contain billions or even trillions of stars. The Milky Way is our home galaxy. Source: NASA Universe Exploration."
+                explanation: "A galaxy is a vast collection of stars, gas, and dust bound together by gravity. Galaxies can contain billions or even trillions of stars. The Milky Way is our home galaxy (Source: NASA Universe Exploration)."
             },
             {
                 question: "How long does it take Earth to orbit the Sun?",
@@ -632,7 +705,7 @@
                 question: "Which of these is a dwarf planet in our solar system?",
                 options: ["Neptune", "Pluto", "Uranus", "Saturn"],
                 correct: 1,
-                explanation: "Pluto is a dwarf planet in the Kuiper Belt beyond Neptune. It shares its orbital neighborhood with many icy objects. Pluto was reclassified as a dwarf planet in 2006. Source: NASA Pluto."
+                explanation: "Pluto is a dwarf planet in the Kuiper Belt beyond Neptune. It shares its orbital neighborhood with many icy objects. Pluto was reclassified as a dwarf planet in 2006 (Source: NASA Pluto)."
             }
             ],
             hard: [
@@ -640,13 +713,13 @@
                     question: "Which moon is the only one known to have stable bodies of liquid on its surface?",
                     options: ["Europa", "Ganymede", "Titan", "Callisto"],
                     correct: 2,
-                    explanation: "Titan has stable lakes and seas of liquid methane and ethane on its surface. It is the only world besides Earth known to have stable surface liquid bodies. Its thick atmosphere also contains complex organic compounds. Source: NASA Titan."
+                    explanation: "Titan has stable lakes and seas of liquid methane and ethane on its surface. It is the only world besides Earth known to have stable surface liquid bodies. Its thick atmosphere also contains complex organic compounds (Source: NASA Titan)."
                 },
                 {
                     question: "Which dwarf planet is located in the asteroid belt?",
                     options: ["Pluto", "Ceres", "Eris", "Haumea"],
                     correct: 1,
-                    explanation: "Ceres is a dwarf planet in the asteroid belt between Mars and Jupiter. It is the belt's largest object. NASA's Dawn spacecraft studied Ceres from orbit. Source: NASA Ceres."
+                    explanation: "Ceres is a dwarf planet in the asteroid belt between Mars and Jupiter. It is the belt's largest object. NASA's Dawn spacecraft studied Ceres from orbit (Source: NASA Ceres)."
                 },
                 {
                     question: "Which planet has the shortest day, rotating in about 10 hours?",
@@ -658,31 +731,31 @@
                     question: "What is the largest moon in the solar system?",
                     options: ["Titan", "Callisto", "Earth's Moon", "Ganymede"],
                     correct: 3,
-                    explanation: "Ganymede, which orbits Jupiter, is the largest moon in the solar system. It is even larger than the planet Mercury. Ganymede also has its own magnetic field. Source: NASA Ganymede."
+                    explanation: "Ganymede, which orbits Jupiter, is the largest moon in the solar system. It is even larger than the planet Mercury. Ganymede also has its own magnetic field (Source: NASA Ganymede)."
                 },
                 {
                     question: "Which planet has an axial tilt of about 98 degrees?",
                     options: ["Neptune", "Saturn", "Uranus", "Mercury"],
                     correct: 2,
-                    explanation: "Uranus is tilted about 98 degrees, so it rotates nearly on its side. This causes extreme seasons as it travels around the Sun. A major collision early in its history may have caused the tilt. Source: NASA Uranus."
+                    explanation: "Uranus is tilted about 98 degrees, so it rotates nearly on its side. This causes extreme seasons as it travels around the Sun. A major collision early in its history may have caused the tilt (Source: NASA Uranus)."
                 },
                 {
                     question: "Which spacecraft was the first to enter interstellar space?",
                     options: ["Pioneer 10", "New Horizons", "Voyager 2", "Voyager 1"],
                     correct: 3,
-                    explanation: "Voyager 1 crossed the heliopause into interstellar space in 2012. It was the first spacecraft to do so. Voyager 2 crossed the boundary in 2018. Source: NASA Voyager."
+                    explanation: "Voyager 1 crossed the heliopause into interstellar space in 2012. It was the first spacecraft to do so. Voyager 2 crossed the boundary in 2018 (Source: NASA Voyager)."
                 },
                 {
                     question: "What is the largest volcano known in the solar system?",
                     options: ["Mauna Kea", "Olympus Mons", "Elysium Mons", "Ascraeus Mons"],
                     correct: 1,
-                    explanation: "Olympus Mons on Mars is the largest known volcano in the solar system. It rises about 22 kilometers above the surrounding plains. Its broad shape is that of a shield volcano. Source: NASA Mars Exploration."
+                    explanation: "Olympus Mons on Mars is the largest known volcano in the solar system. It rises about 22 kilometers above the surrounding plains. Its broad shape is that of a shield volcano (Source: NASA Mars Exploration)."
                 },
                 {
                     question: "Which planet has the moon Triton, which orbits in a retrograde direction?",
                     options: ["Uranus", "Jupiter", "Saturn", "Neptune"],
                     correct: 3,
-                    explanation: "Triton is Neptune's largest moon and travels around the planet in a retrograde orbit. That unusual direction suggests Neptune captured it from elsewhere. Triton has a cold, icy surface with active nitrogen geysers. Source: NASA Neptune."
+                    explanation: "Triton is Neptune's largest moon and travels around the planet in a retrograde orbit. That unusual direction suggests Neptune captured it from elsewhere. Triton has a cold, icy surface with active nitrogen geysers (Source: NASA Neptune)."
                 },
                 {
                     question: "Which planet has the highest average density?",
@@ -694,7 +767,7 @@
                     question: "The Kuiper Belt is primarily located beyond the orbit of which planet?",
                     options: ["Saturn", "Jupiter", "Mars", "Neptune"],
                     correct: 3,
-                    explanation: "The Kuiper Belt begins beyond Neptune's orbit. It contains many icy bodies, including Pluto. The region preserves clues about the early solar system. Source: NASA Kuiper Belt."
+                    explanation: "The Kuiper Belt begins beyond Neptune's orbit. It contains many icy bodies, including Pluto. The region preserves clues about the early solar system (Source: NASA Kuiper Belt)."
                 }
             ]
         };
@@ -755,6 +828,14 @@
             updateProgress();
             updateScoreDisplay();
             clearFeedback();
+            if (answers[currentQuestion] !== null) {
+                const isCorrect = answers[currentQuestion] === data.correct;
+                showFeedback(
+                    isCorrect ? 'Correct! 🎉' : `Wrong! The correct answer is "${data.options[data.correct]}"`,
+                    isCorrect
+                );
+                showLearningPanel(data);
+            }
             updateNavigation();
         }
 
@@ -780,6 +861,69 @@
             }
 
             updateScoreDisplay();
+            showLearningPanel(data);
+        }
+
+        function showLearningPanel(data) {
+            const panel = document.getElementById('learningPanel');
+            const toggle = document.getElementById('learningToggle');
+            const explanation = document.getElementById('learningExplanation');
+            panel.classList.remove('hidden');
+            explanation.textContent = data.explanation;
+            explanation.classList.add('hidden');
+            toggle.textContent = 'Learn more';
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.setAttribute('aria-label', 'Show explanation for this question');
+        }
+
+        function toggleExplanation(toggle, explanation) {
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', String(!expanded));
+            toggle.setAttribute(
+                'aria-label',
+                `${expanded ? 'Show' : 'Hide'} explanation for ${toggle.dataset.context}`
+            );
+            toggle.textContent = expanded ? 'Learn more' : 'Show less';
+            explanation.classList.toggle('hidden', expanded);
+        }
+
+        function renderResultsReview() {
+            const container = document.getElementById('reviewQuestions');
+            container.innerHTML = '';
+
+            quizData.forEach((data, index) => {
+                const item = document.createElement('article');
+                item.className = 'review-item';
+
+                const question = document.createElement('h3');
+                question.className = 'review-question';
+                question.textContent = `${index + 1}. ${data.question}`;
+
+                const answer = document.createElement('p');
+                answer.className = 'review-answer';
+                const selectedAnswer = answers[index] === null
+                    ? 'Not answered'
+                    : data.options[answers[index]];
+                answer.textContent = `Your answer: ${selectedAnswer}. Correct answer: ${data.options[data.correct]}.`;
+
+                const toggle = document.createElement('button');
+                toggle.className = 'btn btn-secondary learning-toggle';
+                toggle.type = 'button';
+                toggle.textContent = 'Learn more';
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-controls', `reviewExplanation${index}`);
+                toggle.dataset.context = `question ${index + 1}`;
+                toggle.setAttribute('aria-label', `Show explanation for question ${index + 1}`);
+
+                const explanation = document.createElement('p');
+                explanation.className = 'review-explanation hidden';
+                explanation.id = `reviewExplanation${index}`;
+                explanation.textContent = data.explanation;
+                toggle.onclick = () => toggleExplanation(toggle, explanation);
+
+                item.append(question, answer, toggle, explanation);
+                container.appendChild(item);
+            });
         }
 
         function showFeedback(message, isCorrect) {
@@ -792,6 +936,12 @@
             const feedback = document.getElementById('feedback');
             feedback.className = 'feedback';
             feedback.textContent = '';
+            document.getElementById('learningPanel').classList.add('hidden');
+            document.getElementById('learningExplanation').classList.add('hidden');
+            document.getElementById('learningExplanation').textContent = '';
+            document.getElementById('learningToggle').textContent = 'Learn more';
+            document.getElementById('learningToggle').setAttribute('aria-expanded', 'false');
+            document.getElementById('learningToggle').setAttribute('aria-label', 'Show explanation for this question');
         }
 
         function updateProgress() {
@@ -829,6 +979,7 @@
         function showResults() {
             document.getElementById('quizContent').classList.add('hidden');
             document.getElementById('resultsScreen').classList.remove('hidden');
+            renderResultsReview();
 
             const percentage = Math.round((score / quizData.length) * 100);
             document.getElementById('finalScore').textContent = `${score}/${quizData.length} (${percentage}%)`;
